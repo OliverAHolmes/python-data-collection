@@ -53,7 +53,7 @@ Important notes:
 
 ## Submission:
 
-Please create a fork of this repository.
+Please create a **private fork** of this repository.
 
 We encourage you to edit the README, or create an additional file, to explain your solution. You may also add comments to the code explaining elements of your solution, these will be read.
 
