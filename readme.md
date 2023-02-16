@@ -53,7 +53,11 @@ Important notes:
 
 ## Submission:
 
-Please create a **private fork** of this repository.
+Please duplicate this repository.
+
+Follow the instructions here: https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository#mirroring-a-repository
+
+Please **do not fork** the repository.
 
 We encourage you to edit the README, or create an additional file, to explain your solution. You may also add comments to the code explaining elements of your solution, these will be read.
 
