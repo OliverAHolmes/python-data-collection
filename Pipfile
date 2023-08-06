@@ -7,10 +7,12 @@ name = "pypi"
 fastapi = "*"
 sqlmodel = "*"
 uvicorn = "*"
+pydantic = "*"
 
 [dev-packages]
 black = "*"
 httpx = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.11"
