@@ -5,7 +5,7 @@ from schemas.column_constraint import ConstraintCreate, ConstraintUpdate
 from models import ColumnConstraint
 
 
-# 1. Create a new constraint
+# Create a new constraint
 def create_constraint(db: Session, constraint: ConstraintCreate) -> ColumnConstraint:
     db_constraint = ColumnConstraint(**constraint.dict())
     db.add(db_constraint)
@@ -14,12 +14,12 @@ def create_constraint(db: Session, constraint: ConstraintCreate) -> ColumnConstr
     return db_constraint
 
 
-# 2. Get a constraint by its ID
+# Get a constraint by its ID
 def get_constraint(db: Session, constraint_id: int) -> Optional[ColumnConstraint]:
     return db.query(ColumnConstraint).filter(ColumnConstraint.id == constraint_id).first()
 
 
-# 3. Update a constraint
+# Update a constraint
 def update_constraint(
     db: Session, constraint_id: int, constraint_data: ConstraintUpdate
 ) -> ColumnConstraint:
