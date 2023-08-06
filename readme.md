@@ -1,66 +1,63 @@
-# Backend Interview Coding Challenge
-This challenge is based on a simplified design challenge the Regrow engineering team has had to solve.
+# Dynamic Data Collection API for Farming Practices Using FastAPI
 
-There is no expectation to get through all of this task, rather, we want to see how you think and how you approach problems. 
+## Objective:
+Develop a flexible API using FastAPI that allows for dynamic data collection from farmers regarding their farming practices over a specified number of years. The API should support the creation of varied table configurations based on user needs.
 
-If you are completing this task live, please ask as many questions as you want. The more, the merrier!
+Link for assessment:
+[python-data-collection](https://github.com/regrow-coding-challenge/python-data-collection)
 
-If you have elected to do this as a take home, we are more interested in how you approached the problem, and the assumptions/decisions you made in your solution, rather than the efficiency or beauty of your code. Please feel free to contact Regrow (via your recruiter or our People team) for clarification on the task requirements. Alternatively you may wish to make an assumption and proceed. You are welcome to do this, we are evalulating problem solving and design rather than replicating a particular correct answer. However, in this case please document any assumptions you are making.
+## Features & Requirements:
 
-## Prologue, Setup
-We have tested this using python 3.11.1. It may work on other versions, but for safety please use that revision.
-Both a `pipfile` and `requirements.txt` are provided and contain all the packages you need. You can use more packages if you want.
+1. **Dynamic Column Configuration:**
 
-In this zip file, we have created a boilerplate service. It has some methods as examples, that for basic usage, are correct. It should cover most of the methods required to complete this task.
+- Allow the user to define columns for the data collection table through API requests.
+- Support a variety of column types:
+    - Four-digit number (e.g., Year)
+    - Constrained picklist (e.g., Crop Type with options like corn, wheat, etc.)
+    - Constrained float (e.g., Tillage Depth where 0 <= x < 10)
+    - Boolean (e.g., Tilled?)
+    - Regex validated string (e.g., External Account ID)
+    - Slider control mapped to a float (alternative representation in API, since there's no UI)
 
-All database tables are created in a file `database.db` via `sqlite`. Delete this file and restart the service to have it create your changed tables.
+2. **Dynamic Row Configuration:**
 
-## The Problem: 
-In one particular part of our system, we need to collect some information from farmers. Specifically, we need to ask them about what farming practices they have performed on their fields over the last several years.
+- Provide endpoints to specify the number of years of data to be collected.
+- The API should generate the required configuration for the specified number of rows.
 
-For reference, the UI will render the table something like:
+3. **Configuration Storage:**
 
-![A Table](sample_table.png "Table View")
+- The API should allow storing, retrieving, updating, and deleting table configurations.
+- While data entry values aren't stored, the configuration for each table should be persisted for future use.
 
-Typically, a table may look like this example:
+4. **Extensibility:**
 
-| Year | Crop Type | Tillage Depth | Comments |
-| --- | --- | --- | --- |
-| Four digit number | Constrained Picklist (might be [corn, wheat, barley, hops...] | Constrained Float ie must be `0 <= x < 10`, can be optionally filled  | String |
+- The API's design should prioritize scalability and extensibility. Adding new column types or features in the future should be relatively straightforward.
 
-However, due to the flexibility of our offering, this is not the only data we want to collect. We may want to collect something like:
+5. **Validation:**
 
-| Year | Tilled? | External Account ID | Tillage Depth |
-| --- | --- | --- | --- |
-| Four digit number | Bool | Regex Validated String | Slider Control mapped to a float |
+- The API should validate incoming configuration requests to ensure they adhere to the predefined constraints of each column type.
 
-By the same token, we may want some other, unique set of columns that are picked from both the examples. You need to design and implement a solution that would let you represent both examples and any combination/permuation of their constituent columns.
+## Implementation Steps:
 
-Additionally, as per the screenshot, some configuration must be present to tell the UI how many years of data we wish to collect (hence how many rows to render).
+1. **Database Design:** 
 
-In the future we may want to collect other information too; these columns are not fixed.
+- Create database tables/entities to store the table configurations, which include columns, their types, constraints, and other metadata.
 
-The UI will take your configuration and use it to render its data collection table. You don't need to save the actual values users enter, just the configuration for the table.
+2. **FastAPI Setup:**
 
-It is your task to:
-- Define and implement a database schema that can store this configuration.
-- Expose a REST API to create/delete these entities.
-- Handle some validation of inputs where sensible.
+- Initialize a FastAPI application.
+- Integrate with the database using ORM with SQLAlchemy.
 
-Important notes:
-- Please don't actually store any data; we are only interested in this task of how you would store the table schema. This is to specifically make the task shorter.
+3. **API Development:**
 
+- Implement CRUD (Create, Read, Update, Delete) endpoints for table configurations.
+- Add validation logic for various column constraints using FastAPI's request validation features.
 
-## Submission:
+4. **Testing:**
 
-Please duplicate this repository.
+- Create unit tests for each endpoint, validating both happy paths and error scenarios.
+- Use FastAPI's test client to simulate API calls and verify responses.
 
-Follow the instructions here: https://docs.github.com/en/repositories/creating-and-managing-repositories/duplicating-a-repository#mirroring-a-repository
+5. **Documentation:**
 
-Please **do not fork** the repository.
-
-We encourage you to edit the README, or create an additional file, to explain your solution. You may also add comments to the code explaining elements of your solution, these will be read.
-
-*Let the Regrow team know, via your point of contact (either a recruiter or our internal people team), when you are ready for us to review.** At this point you will add us as collaborators on your repository so we can view your solution. Do not raise a pull-request against the original repository.
-
-Good luck!
+- Utilize FastAPI's automatic Swagger UI and ReDoc integration to provide documentation for the API endpoints and their expected payloads.
