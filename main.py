@@ -1,43 +1,30 @@
-from fastapi import FastAPI, HTTPException, status
-from sqlmodel import select, Session
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-import db_internal
-from models import User
+import db.db_internal as db_internal
+from routers import column_constraint, column_definition, home, users, table_configurations
 
 app = FastAPI()
 
+# CORS configuration
+origins = [
+    "http://0.0.0.0:8000",  # Adjust this as needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 async def startup_event():
     db_internal.create_db()
 
-
-@app.get("/users", response_model=list[User])
-async def get_users():
-    with Session(db_internal.engine) as session:
-        statement = select(User)
-        results = session.execute(statement)
-        results = list(i[0] for i in results.all())
-    if len(results) == 0:
-        return []
-    return results
-
-
-@app.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_user(user_id: int):
-    with Session(db_internal.engine) as session:
-        row = session.get(User, user_id)
-        if not row:
-            raise HTTPException(status_code=404, detail="user_id not found")
-        session.delete(row)
-        session.commit()
-        return
-
-
-@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=User)
-async def create_user(user: User):
-    with Session(db_internal.engine) as session:
-        session.add(user)
-        session.commit()
-        session.refresh(user)
-        return user
+app.include_router(home.router, tags=["home"])
+app.include_router(users.router, prefix="/users", tags=["users"])
+app.include_router(column_constraint.router, prefix="/constraints", tags=["constraints"])
+app.include_router(column_definition.router, prefix="/columns", tags=["columns"])
+app.include_router(table_configurations.router, prefix="/table-configurations", tags=["table-configurations"])
