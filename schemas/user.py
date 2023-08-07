@@ -16,10 +16,7 @@ class UserUpdate(UserBase):
     name: Optional[str]
 
 
-class UserInDB(UserBase):
-    id: int
+class UserRead(UserBase):
+    id: Optional[int]
+    name: str
     created_at: dt
-
-
-class UserRead(UserInDB):
-    pass

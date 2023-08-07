@@ -9,6 +9,7 @@ from models import (
 from schemas.table_configuration import TableConfigurationRead
 from schemas.column_definition import ColumnDefinitionRead
 
+
 # Create a new table configuration
 def create_table_configuration(
     db: Session, table_configuration_data: TableConfiguration

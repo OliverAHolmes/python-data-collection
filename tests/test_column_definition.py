@@ -39,7 +39,6 @@ def list_column_definitions_endpoint(client) -> list:
 
 
 def test_column_definition_endpoints(db_session):
-
     response = create_table_configuration(client)
     table_configuration_id = response["id"]
 
@@ -52,21 +51,28 @@ def test_column_definition_endpoints(db_session):
             "parameters": {"options": ["corn", "wheat", "barley", "hops"]},
         },
     }
-    response = create_column_definition_endpoint(client, table_configuration_id, column_data)
+    response = create_column_definition_endpoint(
+        client, table_configuration_id, column_data
+    )
     column_definition_id = response["id"]
 
     # Fetch and verify
     fetched_column = get_column_definition_endpoint(client, column_definition_id)
     assert fetched_column["name"] == column_data["name"]
     assert fetched_column["column_order"] == column_data["column_order"]
-    assert fetched_column["column_constraint"]["parameters"]["options"] == column_data["column_constraint"]["parameters"]["options"]
+    assert (
+        fetched_column["column_constraint"]["parameters"]["options"]
+        == column_data["column_constraint"]["parameters"]["options"]
+    )
 
     # Update the column definition
     update_data = {
         "name": "Sample Column 2",
         "column_order": 2,
     }
-    updated_column = update_column_definition_endpoint(client, column_definition_id, update_data)
+    updated_column = update_column_definition_endpoint(
+        client, column_definition_id, update_data
+    )
     assert updated_column["name"] == update_data["name"]
     assert updated_column["column_order"] == update_data["column_order"]
 
@@ -77,4 +83,6 @@ def test_column_definition_endpoints(db_session):
     # Delete and verify deletion
     delete_column_definition_endpoint(client, column_definition_id)
     all_columns_after_deletion = list_column_definitions_endpoint(client)
-    assert not any(column["id"] == column_definition_id for column in all_columns_after_deletion)
+    assert not any(
+        column["id"] == column_definition_id for column in all_columns_after_deletion
+    )

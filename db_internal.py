@@ -15,5 +15,6 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def create_db():
     if settings.ENV == "testing" and os.path.exists(settings.db_path):
         os.remove(settings.db_path)
+
     if not os.path.exists(settings.db_path):
         SQLModel.metadata.create_all(engine)

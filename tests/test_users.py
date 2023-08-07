@@ -20,7 +20,7 @@ def get_all_users(client) -> dict:
 
 def delete_user(client, user_id: int):
     response = client.delete(f"{base_url}/{user_id}")
-    assert response.status_code == status.HTTP_204_NO_CONTENT
+    return response
 
 
 def test_user_endpoints(db_session):
@@ -36,5 +36,14 @@ def test_user_endpoints(db_session):
     assert response[0]["id"] == user_id
     assert response[0]["name"] == "foobar"
     response = delete_user(client, user_id=user_id)
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+
     response = get_all_users(client)
     assert len(response) == 0
+
+
+def test_delete_non_existent_user(db_session):
+    non_existent_user_id = 99999
+    response = delete_user(client, user_id=non_existent_user_id)
+    print(response.status_code)
+    assert response.status_code == status.HTTP_404_NOT_FOUND

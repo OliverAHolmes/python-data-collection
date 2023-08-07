@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status
-from schemas.column_constraint import ConstraintRead, ConstraintCreate, ConstraintUpdate
+from schemas.column_constraint import ConstraintRead, ConstraintUpdate
 from db_internal import SessionLocal
 from sqlalchemy.orm import Session
 

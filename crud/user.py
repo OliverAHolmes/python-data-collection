@@ -1,9 +1,28 @@
-from typing import Optional
-from sqlmodel import Field, SQLModel
-from datetime import datetime as dt
+from sqlmodel import Session, select
+import db_internal
+from models import User
 
 
-class User(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
-    created_at: dt = Field(default_factory=dt.utcnow)
+def get_all_users():
+    with Session(db_internal.engine) as session:
+        statement = select(User)
+        results = session.execute(statement)
+        return list(i[0] for i in results.all())
+
+
+def delete_user_by_id(user_id: int):
+    with Session(db_internal.engine) as session:
+        row = session.get(User, user_id)
+        if not row:
+            return None
+        session.delete(row)
+        session.commit()
+        return row
+
+
+def create_new_user(user: User):
+    with Session(db_internal.engine) as session:
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+        return user

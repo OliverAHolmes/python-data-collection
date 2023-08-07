@@ -1,9 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-import db_internal as db_internal
+import db_internal
 from routers import (
     column_constraint,
     column_definition,
@@ -13,6 +13,11 @@ from routers import (
 )
 
 app = FastAPI()
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request, exc):
+    return JSONResponse(content={"detail": exc.detail}, status_code=exc.status_code)
 
 
 @app.exception_handler(RequestValidationError)
