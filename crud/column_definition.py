@@ -1,8 +1,42 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List, Optional
 from models import (
     ColumnDefinition,
-)  # Ensure this model is imported from your models module
+    ColumnConstraint,
+)
+from schemas.column_definition import ColumnDefinitionRead
+
+
+def create_column_definition(
+    db: Session, table_configuration_id: int, table_configuration_data: ColumnDefinition
+) -> ColumnDefinition:
+    # Convert the Pydantic model into a dictionary
+    column_definition_dict = table_configuration_data.dict()
+    # Extract columns from the dictionary
+    column_constraint = column_definition_dict.pop("column_constraint", None)
+
+    db_column_definition = ColumnDefinition(**column_definition_dict)
+    db_column_definition.table_configuration_id = table_configuration_id
+
+    # Commit the db_column_definition first to get an ID
+    db.add(db_column_definition)
+    db.commit()
+
+    if column_constraint:
+        column_constraint["column_definition_id"] = db_column_definition.id
+        db_column_constraint = ColumnConstraint(**column_constraint)
+        db.add(db_column_constraint)
+        db.commit()
+
+    # Adjust the filtering condition
+    related_columns_data = (
+        db.query(ColumnDefinition)
+        .options(joinedload(ColumnDefinition.column_constraint))
+        .filter(ColumnDefinition.id == db_column_definition.id)
+        .first()
+    )
+
+    return related_columns_data
 
 
 # Get a column definition by its ID

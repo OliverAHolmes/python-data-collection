@@ -1,17 +1,8 @@
-# import models, schemas
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List, Optional
-from schemas.column_constraint import ConstraintCreate, ConstraintUpdate
+from schemas.column_constraint import ConstraintUpdate
 from models import ColumnConstraint
-
-
-# Create a new constraint
-def create_constraint(db: Session, constraint: ConstraintCreate) -> ColumnConstraint:
-    db_constraint = ColumnConstraint(**constraint.dict())
-    db.add(db_constraint)
-    db.commit()
-    db.refresh(db_constraint)
-    return db_constraint
 
 
 # Get a constraint by its ID
@@ -40,18 +31,6 @@ def update_constraint(
     db.refresh(existing_constraint)
 
     return existing_constraint
-
-
-# Delete a constraint
-def delete_constraint(db: Session, constraint_id: int) -> bool:
-    db_constraint = (
-        db.query(ColumnConstraint).filter(ColumnConstraint.id == constraint_id).first()
-    )
-    if db_constraint:
-        db.delete(db_constraint)
-        db.commit()
-        return True
-    return False
 
 
 # List all constraints (optional)

@@ -9,21 +9,6 @@ from models import (
 from schemas.table_configuration import TableConfigurationRead
 from schemas.column_definition import ColumnDefinitionRead
 
-
-# def transform_column_data(column: ColumnDefinition) -> dict:
-#     """
-#     Transforms an ORM ColumnDefinition object into a dictionary format.
-#     """
-#     return {
-#         "id": column.id,
-#         "name": column.name,
-#         # ... (other fields of the ColumnDefinition)
-#         "column_constraint": {
-#             "constraint_type": column.column_constraint.constraint_type,
-#             "parameters": column.column_constraint.parameters,
-#             # ... (other fields of the ColumnConstraint)
-#         }
-#     }
 # Create a new table configuration
 def create_table_configuration(
     db: Session, table_configuration_data: TableConfiguration

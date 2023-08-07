@@ -1,8 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException
-from schemas.column_definition import ColumnDefinitionRead, ColumnDefinitionUpdate
+from fastapi import APIRouter, Depends, HTTPException, status
+from schemas.column_definition import (
+    ColumnDefinitionRead,
+    ColumnDefinitionCreate,
+    ColumnDefinitionUpdate,
+)
 from sqlmodel import Session
-from db_internal import SessionLocal  # Make sure you have this import in your code
-from crud.column_definition import (  # Update this import path accordingly
+from db_internal import SessionLocal
+from crud.column_definition import (
+    create_column_definition,
     get_column_definition,
     update_column_definition,
     delete_column_definition,
@@ -19,6 +24,19 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@router.post(
+    "/{table_configuration_id}",
+    status_code=status.HTTP_201_CREATED,
+    response_model=ColumnDefinitionRead,
+)
+def create_column_definition_endpoint(
+    table_configuration_id: int,
+    column_definition_data: ColumnDefinitionCreate,
+    db: Session = Depends(get_db),
+):
+    return create_column_definition(db, table_configuration_id, column_definition_data)
 
 
 @router.get("/{column_definition_id}", response_model=ColumnDefinitionRead)

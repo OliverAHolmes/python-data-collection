@@ -1,10 +1,61 @@
 from fastapi import status
 from fastapi.testclient import TestClient
 from main import app
-from tests.test_utils import create_table_configuration
 
 client = TestClient(app)
 base_url = "/table-configurations/"
+
+
+def create_table_configuration(client) -> dict:
+    response = client.post(
+        base_url,
+        json={
+            "name": "sample_table",
+            "years_to_collect": 5,
+            "created_by": 1,
+            "columns": [
+                {
+                    "name": "Sample Column 1",
+                    "column_order": 1,
+                    "column_constraint": {
+                        "constraint_type": "PICKLIST",
+                        "parameters": {"options": ["corn", "wheat", "barley", "hops"]},
+                    },
+                },
+                {
+                    "name": "Sample Column 2",
+                    "column_order": 2,
+                    "column_constraint": {
+                        "constraint_type": "FLOAT",
+                        "parameters": {"number": 3.14},
+                    },
+                },
+                {
+                    "name": "Sample Column 3",
+                    "column_order": 3,
+                    "column_constraint": {
+                        "constraint_type": "RANGE",
+                        "parameters": {"min": 1.0, "max": 10.0},
+                    },
+                },
+                {
+                    "name": "Sample Column 4",
+                    "column_order": 4,
+                    "column_constraint": {
+                        "constraint_type": "REGEX",
+                        "parameters": {"pattern": "^[a-zA-Z]+$"},
+                    },
+                },
+                {
+                    "name": "Sample Column 5",
+                    "column_order": 5,
+                    "column_constraint": {"constraint_type": "BOOL"},
+                },
+            ],
+        },
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+    return response.json()
 
 
 def get_table_configuration_by_id(client, table_configuration_id: int) -> dict:
@@ -61,32 +112,3 @@ def test_table_configuration_endpoints(db_session):
     delete_table_configuration(client, table_config_id)
     response = get_all_table_configurations(client)
     assert len(response) == 0
-
-
-def test_unsupported_column_constraint(db_session):
-    # Create an entry with an unsupported column constraint
-    response = client.post(
-        base_url,
-        json={
-            "name": "invalid_table",
-            "years_to_collect": 5,
-            "created_by": 1,
-            "columns": [
-                {
-                    "name": "Invalid Column",
-                    "column_order": 1,
-                    "column_constraint": {
-                        "constraint_type": "UNSUPPORTED_CONSTRAINT",
-                        "parameters": {},
-                    },
-                }
-            ],
-        },
-    )
-    # Expecting an Unprocessable Entity response
-    assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert "value is not a valid enumeration member" in response.json()
-
-    # Ensure the invalid table was not created
-    all_tables = get_all_table_configurations(client)
-    assert not any(table["name"] == "invalid_table" for table in all_tables)

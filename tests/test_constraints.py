@@ -1,9 +1,7 @@
 from fastapi import status
 from fastapi.testclient import TestClient
 from main import app
-import db_internal
-
-db_internal.create_db()
+from tests.test_utils import create_table_configuration
 
 client = TestClient(app)
 base_url = "/constraints/"
@@ -38,16 +36,12 @@ def get_all_constraints(client) -> list:
     return response.json()
 
 
-def test_constraint_endpoints():
-    # Create a constraint
-    constraint_data = {
-        "constraint_type": "PICKLIST",
-        "parameters": {"options": ["corn", "wheat", "barley", "hops"]},
-    }
-    created_constraint = create_constraint(client, constraint_data)
+def test_constraint_endpoints(db_session):
+    response = create_table_configuration(client)
+    first_column_constraint_id = response["columns"][0]["column_constraint"]["id"]
 
     # Read the created constraint by ID
-    fetched_constraint = get_constraint_by_id(client, created_constraint["id"])
+    fetched_constraint = get_constraint_by_id(client, first_column_constraint_id)
     assert fetched_constraint["parameters"]["options"] == [
         "corn",
         "wheat",
@@ -61,13 +55,6 @@ def test_constraint_endpoints():
         "parameters": {"options": ["rice", "quinoa", "oats"]},
     }
     updated_constraint = update_constraint(
-        client, created_constraint["id"], update_data
+        client, first_column_constraint_id, update_data
     )
     assert updated_constraint["parameters"]["options"] == ["rice", "quinoa", "oats"]
-
-    # Delete the constraint and confirm it was deleted
-    delete_constraint(client, created_constraint["id"])
-    all_constraints = get_all_constraints(client)
-    assert all(
-        constraint["id"] != created_constraint["id"] for constraint in all_constraints
-    )
