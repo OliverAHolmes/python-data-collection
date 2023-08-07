@@ -1,5 +1,8 @@
 from fastapi import status
 from fastapi.testclient import TestClient
+import db_internal
+
+db_internal.create_db()
 
 from main import app
 

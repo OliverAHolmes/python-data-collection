@@ -1,7 +1,9 @@
 from fastapi import status
 from fastapi.testclient import TestClient
-
 from main import app
+import db_internal
+
+db_internal.create_db()
 
 client = TestClient(app)
 base_url = "/table-configurations/"
