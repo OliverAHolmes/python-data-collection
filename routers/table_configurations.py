@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlmodel import select, Session
-from db.db_internal import SessionLocal
+from db_internal import SessionLocal
 from crud.table_configuration import create_table_configuration, get_table_configuration, update_table_configuration, delete_table_configuration, list_table_configurations
 from schemas.table_configuration import TableConfigurationCreate, TableConfigurationUpdate, TableConfigurationRead
 

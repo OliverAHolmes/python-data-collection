@@ -1,7 +1,7 @@
 
 from fastapi import APIRouter, Depends, status
 from schemas.column_constraint import ConstraintRead, ConstraintCreate, ConstraintUpdate
-from db.db_internal import SessionLocal
+from db_internal import SessionLocal
 from sqlalchemy.orm import Session
 
 from sqlmodel import Session

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from models import ColumnDefinition
 from sqlmodel import Session
-from db.db_internal import SessionLocal  # Make sure you have this import in your code
+from db_internal import SessionLocal  # Make sure you have this import in your code
 from crud.column_definition import (  # Update this import path accordingly
     create_column_definition, 
     get_column_definition, 

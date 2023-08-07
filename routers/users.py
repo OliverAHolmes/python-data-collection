@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from models import User
 from sqlmodel import select, Session
-import db.db_internal as db_internal
+import db_internal as db_internal
 
 router = APIRouter()
 

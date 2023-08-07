@@ -3,7 +3,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-import db.db_internal as db_internal
+import db_internal as db_internal
 from routers import column_constraint, column_definition, home, users, table_configurations
 
 app = FastAPI()

@@ -4,4 +4,4 @@ router = APIRouter()
 
 @router.get("/")
 async def home():
-    return "Welcome to the API!"
+    return "Welcome to the Table configuration API!"
