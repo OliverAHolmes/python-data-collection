@@ -121,7 +121,22 @@ rm -f test.db
 export ENV=testing && pytest tests -x -vv
 ```
 
-### 5. **Install Project Dependencies:**
+### 4. **Get Test Coverage :**
+
+For testing:
+
+```bash
+make test-coverage
+```
+
+This command deletes the `test.db`, sets the environment to `testing`, and then gets the test coverage of the project:
+
+```bash
+rm -f test.db
+export ENV=testing && pytest tests -x -vv --cov=. --cov-report=term-missing
+```
+
+### 6. **Install Project Dependencies:**
 
 To set up the project's dependencies:
 

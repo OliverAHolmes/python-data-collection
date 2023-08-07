@@ -13,6 +13,7 @@ pydantic = "*"
 black = "*"
 httpx = "*"
 pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.11"

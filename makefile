@@ -11,5 +11,9 @@ test:
 	rm -f test.db
 	export ENV=testing && pytest tests -x -vv
 
+test-coverage:
+	rm -f test.db
+	export ENV=testing && pytest tests -x -vv --cov=. --cov-report=term-missing
+
 install:
 	pipenv install --dev
