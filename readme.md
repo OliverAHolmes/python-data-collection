@@ -61,3 +61,61 @@ Link for assessment:
 5. **Documentation:**
 
 - Utilize FastAPI's automatic Swagger UI and ReDoc integration to provide documentation for the API endpoints and their expected payloads.
+
+## Project Commands
+
+### 1. Run the Project:
+
+Use this command to start the Uvicorn server:
+```bash
+make run
+```
+This command executes:
+```bash
+uvicorn main:app --reload --host 0.0.0.0
+```
+
+### 2. Clean and Run:
+
+This command deletes the `database.db` and then starts the Uvicorn server and is for development:
+```bash
+make clean-run
+```
+Executed commands:
+```bash
+rm -f database.db && uvicorn main:app --reload --host 0.0.0.0
+```
+
+### 3. Generate Requirements.txt:
+
+Generate a `requirements.txt` file from your Pipenv environment:
+```bash
+make generate_requirements_txt
+```
+This uses the command:
+```bash
+pipenv requirements --dev > requirements.txt
+```
+
+### 4. Run Tests:
+
+Use this command to run tests:
+```bash
+make test
+```
+Before testing, it removes the `test.db` and then runs pytest:
+```bash
+rm -f test.db
+db_path="test.db" pytest -x -vv
+```
+
+### 5. Install Dependencies:
+
+To install the project dependencies, use:
+```bash
+make install
+```
+This command corresponds to:
+```bash
+pipenv install --dev
+```
