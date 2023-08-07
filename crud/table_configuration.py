@@ -9,6 +9,7 @@ from models import (
 from schemas.table_configuration import TableConfigurationRead
 from schemas.column_definition import ColumnDefinitionRead
 
+
 # def transform_column_data(column: ColumnDefinition) -> dict:
 #     """
 #     Transforms an ORM ColumnDefinition object into a dictionary format.
@@ -53,7 +54,6 @@ def create_table_configuration(
         db.add(db_column_definition)
         db.flush()  # Get the ID for the column definition
 
-
     db.commit()
     db.refresh(db_table_configuration)
 
@@ -71,6 +71,7 @@ def create_table_configuration(
         created_by=db_table_configuration.created_by,
         columns=related_columns_data,
     )
+
 
 # Get a table configuration by its ID
 def get_table_configuration(
@@ -125,7 +126,9 @@ def update_table_configuration(
     related_columns_data = (
         db.query(ColumnDefinition)
         .options(joinedload(ColumnDefinition.column_constraint))
-        .filter(ColumnDefinition.table_configuration_id == existing_table_configuration.id)
+        .filter(
+            ColumnDefinition.table_configuration_id == existing_table_configuration.id
+        )
         .all()
     )
 

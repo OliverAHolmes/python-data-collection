@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from datetime import datetime as dt
 from schemas.column_constraint import ConstraintCreate, ConstraintRead
 
+
 # Pydantic models
 class ColumnDefinitionBase(BaseModel):
     name: str
@@ -10,13 +11,16 @@ class ColumnDefinitionBase(BaseModel):
     table_configuration_id: Optional[int]
     column_constraint: ConstraintCreate
 
+
 class ColumnDefinitionCreate(ColumnDefinitionBase):
     pass
 
-class ColumnDefinitionUpdate(ColumnDefinitionBase):
+
+class ColumnDefinitionUpdate(BaseModel):
     name: Optional[str]
+    column_order: Optional[int]
     table_configuration_id: Optional[int]
-    constraint_id: Optional[int]
+
 
 class ColumnDefinitionRead(BaseModel):
     id: int
@@ -28,4 +32,3 @@ class ColumnDefinitionRead(BaseModel):
 
     class Config:
         orm_mode = True
-

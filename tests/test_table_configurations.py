@@ -22,50 +22,39 @@ def create_table_configuration(client) -> dict:
                     "column_order": 1,
                     "column_constraint": {
                         "constraint_type": "PICKLIST",
-                        "parameters": {
-                            "options": ["corn", "wheat", "barley", "hops"]
-                        }
-                    }
+                        "parameters": {"options": ["corn", "wheat", "barley", "hops"]},
+                    },
                 },
                 {
                     "name": "Sample Column 2",
                     "column_order": 2,
                     "column_constraint": {
                         "constraint_type": "FLOAT",
-                        "parameters": {
-                            "number": 3.14
-                        }
-                    }
+                        "parameters": {"number": 3.14},
+                    },
                 },
                 {
                     "name": "Sample Column 3",
                     "column_order": 3,
                     "column_constraint": {
                         "constraint_type": "RANGE",
-                        "parameters": {
-                            "min": 1.0,
-                            "max": 10.0
-                        }
-                    }
+                        "parameters": {"min": 1.0, "max": 10.0},
+                    },
                 },
                 {
                     "name": "Sample Column 4",
                     "column_order": 4,
                     "column_constraint": {
                         "constraint_type": "REGEX",
-                        "parameters": {
-                            "pattern": "^[a-zA-Z]+$"
-                        }
-                    }
+                        "parameters": {"pattern": "^[a-zA-Z]+$"},
+                    },
                 },
                 {
                     "name": "Sample Column 5",
                     "column_order": 5,
-                    "column_constraint": {
-                        "constraint_type": "BOOL"
-                    }
-                }
-            ]
+                    "column_constraint": {"constraint_type": "BOOL"},
+                },
+            ],
         },
     )
     assert response.status_code == status.HTTP_201_CREATED
@@ -96,7 +85,6 @@ def get_all_table_configurations(client) -> dict:
 
 
 def test_table_configuration_endpoints():
-
     # Expect nothing in fresh db
     response = get_all_table_configurations(client)
     assert len(response) == 0
@@ -128,8 +116,8 @@ def test_table_configuration_endpoints():
     response = get_all_table_configurations(client)
     assert len(response) == 0
 
-def test_unsupported_column_constraint():
 
+def test_unsupported_column_constraint():
     # Create an entry with an unsupported column constraint
     response = client.post(
         base_url,
@@ -143,16 +131,16 @@ def test_unsupported_column_constraint():
                     "column_order": 1,
                     "column_constraint": {
                         "constraint_type": "UNSUPPORTED_CONSTRAINT",
-                        "parameters": {}
-                    }
+                        "parameters": {},
+                    },
                 }
-            ]
+            ],
         },
     )
     # Expecting an Unprocessable Entity response
     assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert 'value is not a valid enumeration member' in response.json()
+    assert "value is not a valid enumeration member" in response.json()
 
     # Ensure the invalid table was not created
     all_tables = get_all_table_configurations(client)
-    assert not any(table['name'] == 'invalid_table' for table in all_tables)
+    assert not any(table["name"] == "invalid_table" for table in all_tables)

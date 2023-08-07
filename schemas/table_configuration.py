@@ -3,6 +3,7 @@ from typing import Optional, List
 from schemas.column_definition import ColumnDefinitionCreate, ColumnDefinitionRead
 from models import ColumnDefinition
 
+
 class TableConfigurationCreate(BaseModel):
     name: str
     years_to_collect: int
@@ -10,10 +11,12 @@ class TableConfigurationCreate(BaseModel):
     updated_by: Optional[int]
     columns: List[ColumnDefinitionCreate]
 
+
 class TableConfigurationUpdate(BaseModel):
     name: Optional[str]
     years_to_collect: Optional[int]
     updated_by: int
+
 
 class TableConfigurationRead(BaseModel):
     id: int

@@ -10,12 +10,16 @@ class ColumnDefinition(SQLModel, table=True):
     name: str = Field(description="Name of the column.")
     column_order: int = Field(description="Order of the column in the table.")
     table_configuration_id: int = Field(
-        sa_column=Column(Integer, ForeignKey("table_configuration.id", ondelete="CASCADE")),
+        sa_column=Column(
+            Integer, ForeignKey("table_configuration.id", ondelete="CASCADE")
+        ),
         description="ID of the associated table configuration.",
     )
     created_at: dt = Field(
         default_factory=dt.utcnow,
         description="Timestamp of when the column definition was created.",
     )
-    column_constraint: ColumnConstraint = Relationship(back_populates="column_definition", sa_relationship_kwargs={'uselist': False})
+    column_constraint: ColumnConstraint = Relationship(
+        back_populates="column_definition", sa_relationship_kwargs={"uselist": False}
+    )
     table_configuration: "TableConfiguration" = Relationship(back_populates="columns")

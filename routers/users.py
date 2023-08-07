@@ -5,6 +5,7 @@ import db_internal as db_internal
 
 router = APIRouter()
 
+
 @router.get("/", response_model=list[User])
 async def get_users():
     with Session(db_internal.engine) as session:

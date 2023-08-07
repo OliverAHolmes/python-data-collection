@@ -16,7 +16,9 @@ def create_constraint(db: Session, constraint: ConstraintCreate) -> ColumnConstr
 
 # Get a constraint by its ID
 def get_constraint(db: Session, constraint_id: int) -> Optional[ColumnConstraint]:
-    return db.query(ColumnConstraint).filter(ColumnConstraint.id == constraint_id).first()
+    return (
+        db.query(ColumnConstraint).filter(ColumnConstraint.id == constraint_id).first()
+    )
 
 
 # Update a constraint
@@ -42,7 +44,9 @@ def update_constraint(
 
 # Delete a constraint
 def delete_constraint(db: Session, constraint_id: int) -> bool:
-    db_constraint = db.query(ColumnConstraint).filter(ColumnConstraint.id == constraint_id).first()
+    db_constraint = (
+        db.query(ColumnConstraint).filter(ColumnConstraint.id == constraint_id).first()
+    )
     if db_constraint:
         db.delete(db_constraint)
         db.commit()
