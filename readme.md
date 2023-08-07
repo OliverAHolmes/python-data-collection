@@ -64,58 +64,74 @@ Link for assessment:
 
 ## Project Commands
 
-### 1. Run the Project:
+### 1. **Run the Project in Development Mode:**
 
-Use this command to start the Uvicorn server:
+To start the Uvicorn server in development mode:
+
 ```bash
 make run
 ```
-This command executes:
+
+This command sets the environment to `development` and runs:
+
 ```bash
-uvicorn main:app --reload --host 0.0.0.0
+export ENV=development && uvicorn main:app --reload --host 0.0.0.0
 ```
 
-### 2. Clean and Run:
+### 2. **Clean and Run in Development Mode:**
 
-This command deletes the `database.db` and then starts the Uvicorn server and is for development:
+This command deletes the `database.db` file and then starts the Uvicorn server in development mode:
+
 ```bash
 make clean-run
 ```
+
 Executed commands:
+
 ```bash
-rm -f database.db && uvicorn main:app --reload --host 0.0.0.0
+export ENV=development && rm -f database.db && uvicorn main:app --reload --host 0.0.0.0
 ```
 
-### 3. Generate Requirements.txt:
+### 3. **Generate Requirements.txt:**
 
-Generate a `requirements.txt` file from your Pipenv environment:
+To produce a `requirements.txt` file from the Pipenv environment:
+
 ```bash
 make generate_requirements_txt
 ```
-This uses the command:
+
+The command used is:
+
 ```bash
 pipenv requirements --dev > requirements.txt
 ```
 
-### 4. Run Tests:
+### 4. **Run Tests:**
 
-Use this command to run tests:
+For testing:
+
 ```bash
 make test
 ```
-Before testing, it removes the `test.db` and then runs pytest:
+
+This command deletes the `test.db`, sets the environment to `testing`, and then runs pytest:
+
 ```bash
 rm -f test.db
-db_path="test.db" pytest -x -vv
+export ENV=testing && pytest tests -x -vv
 ```
 
-### 5. Install Dependencies:
+### 5. **Install Project Dependencies:**
 
-To install the project dependencies, use:
+To set up the project's dependencies:
+
 ```bash
 make install
 ```
-This command corresponds to:
+
+This corresponds to:
+
 ```bash
 pipenv install --dev
 ```
+
