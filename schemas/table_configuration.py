@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, List
 from schemas.column_definition import ColumnDefinitionCreate, ColumnDefinitionRead
-from models import ColumnDefinition
 
 
 class TableConfigurationCreate(BaseModel):

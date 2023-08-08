@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session, joinedload
+from fastapi import status, HTTPException
 from typing import List, Optional
 from models import (
     TableConfiguration,
@@ -7,7 +8,6 @@ from models import (
 )
 
 from schemas.table_configuration import TableConfigurationRead
-from schemas.column_definition import ColumnDefinitionRead
 
 
 # Create a new table configuration
@@ -24,7 +24,7 @@ def create_table_configuration(
     db.add(db_table_configuration)
     db.flush()  # Use flush() here so that db_table_configuration gets an ID
 
-    # For each column data, create ColumnDefinition and ColumnConstraint objects
+    # For each column data, create Column Definition and Column Constraint objects
     for column_data in columns_data:
         constraint_data = column_data.pop("column_constraint", None)
         db_column_definition = ColumnDefinition(**column_data)
@@ -98,7 +98,7 @@ def update_table_configuration(
     if not existing_table_configuration:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="TableConfiguration not found",
+            detail="Table Configuration not found",
         )
     # Update the fields of the existing table configuration
     for key, value in table_configuration_data.dict(exclude_unset=True).items():
@@ -108,7 +108,7 @@ def update_table_configuration(
     db.commit()
     db.refresh(existing_table_configuration)
 
-    # Fetch the related ColumnDefinition records
+    # Fetch the related Column Definition records
     related_columns_data = (
         db.query(ColumnDefinition)
         .options(joinedload(ColumnDefinition.column_constraint))

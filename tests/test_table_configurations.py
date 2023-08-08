@@ -7,60 +7,83 @@ client = TestClient(app)
 base_url = "/table-configurations/"
 
 
-def get_table_configuration_by_id(client, table_configuration_id: int) -> dict:
-    response = client.get(f"{base_url}{table_configuration_id}")
-    assert response.status_code == status.HTTP_200_OK
-    return response.json()
-
-
-def update_table_configuration(client, table_configuration_id: int, data: dict):
-    response = client.put(f"{base_url}{table_configuration_id}", json=data)
-    assert response.status_code == status.HTTP_200_OK
-    return response.json()
-
-
-def delete_table_configuration(client, table_configuration_id: int):
-    response = client.delete(f"{base_url}{table_configuration_id}")
-    assert response.status_code == status.HTTP_200_OK
-
-
-def get_all_table_configurations(client) -> dict:
+def test_get_all_table_configuration(db_session) -> dict:
+    create_table_configuration(client)
     response = client.get(base_url)
     assert response.status_code == status.HTTP_200_OK
-    return response.json()
+    assert len(response.json()) == 1
 
 
-def test_table_configuration_endpoints(db_session):
-    # Expect nothing in fresh db
-    response = get_all_table_configurations(client)
-    assert len(response) == 0
+def test_get_all_table_configuration_when_none(db_session) -> dict:
+    response = client.get(base_url)
+    assert response.status_code == status.HTTP_200_OK
+    assert len(response.json()) == 0
+
+
+def test_get_table_configuration_by_id(db_session) -> dict:
     # Create a table configuration
     response = create_table_configuration(client)
-    table_config_id = response["id"]
+    table_configuration_id = response["id"]
 
     # Get entry
-    response = get_table_configuration_by_id(client, table_config_id)
-    assert response["id"] == table_config_id
-    assert response["name"] == "sample_table"
+    response = client.get(f"{base_url}{table_configuration_id}")
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["id"] == table_configuration_id
+    assert response.json()["name"] == "sample_table"
 
-    # Update entry
+
+def test_get_table_configuration_by_id_not_found(db_session) -> dict:
+    # Create a table configuration id
+    table_configuration_id = 2
+
+    # Get entry where none exists
+    response = client.get(f"{base_url}{table_configuration_id}")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {"detail": "Table Configuration not found"}
+
+
+def test_update_table_configuration(db_session):
+    # Create a table configuration
+    response = create_table_configuration(client)
+    table_configuration_id = response["id"]
+
     updated_data = {
         "name": "updated_table",
         "years_to_collect": 10,
         "updated_by": 3,
     }
-    response = update_table_configuration(client, table_config_id, updated_data)
-    assert response["name"] == "updated_table"
+    response = client.put(f"{base_url}{table_configuration_id}", json=updated_data)
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["name"] == updated_data["name"]
 
-    # List entries and check the updated data
-    response = get_all_table_configurations(client)
-    assert len(response) == 1
-    assert response[0]["name"] == "updated_table"
 
-    # Delete the entry
-    delete_table_configuration(client, table_config_id)
-    response = get_all_table_configurations(client)
-    assert len(response) == 0
+def test_update_table_configuration_when_none(db_session):
+    # Create a table configuration id
+    table_configuration_id = 2
+
+    updated_data = {
+        "name": "updated_table",
+        "years_to_collect": 10,
+        "updated_by": 3,
+    }
+    response = client.put(f"{base_url}{table_configuration_id}", json=updated_data)
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {"detail": "Table Configuration not found"}
+
+
+def test_delete_table_configuration(db_session):
+    response = create_table_configuration(client)
+    table_configuration_id = response["id"]
+    response = client.delete(f"{base_url}{table_configuration_id}")
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+def test_delete_table_configuration_when_none(db_session):
+    # Create a table configuration id
+    table_configuration_id = 2
+    response = client.delete(f"{base_url}{table_configuration_id}")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {"detail": "Table Configuration not found"}
 
 
 def test_unsupported_column_constraint(db_session):
@@ -88,5 +111,6 @@ def test_unsupported_column_constraint(db_session):
     assert "value is not a valid enumeration member" in response.json()
 
     # Ensure the invalid table was not created
-    all_tables = get_all_table_configurations(client)
+    response = client.get(base_url)
+    all_tables = response.json()
     assert not any(table["name"] == "invalid_table" for table in all_tables)

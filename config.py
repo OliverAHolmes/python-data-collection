@@ -1,13 +1,13 @@
-import os
 from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    ENV: str = os.getenv("ENV", "development")
-    if ENV == "testing":
-        db_path = "test.db"
-    else:
-        db_path = "database.db"
+    ENV: str = "development"
+    db_path: str
+
+    @property
+    def db_path(self) -> str:
+        return "test.db" if self.ENV == "testing" else "database.db"
 
 
 settings = Settings()

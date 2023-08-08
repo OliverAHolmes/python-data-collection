@@ -33,6 +33,6 @@ def update_constraint(
     return existing_constraint
 
 
-# List all constraints (optional)
+# List all constraints
 def list_constraints(db: Session) -> List[ColumnConstraint]:
     return db.query(ColumnConstraint).all()

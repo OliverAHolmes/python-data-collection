@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session, joinedload
+from fastapi import status, HTTPException
 from typing import List, Optional
 from models import (
     ColumnDefinition,
     ColumnConstraint,
 )
-from schemas.column_definition import ColumnDefinitionRead
 
 
 def create_column_definition(
@@ -58,7 +58,7 @@ def update_column_definition(
     if not existing_column_definition:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="ColumnDefinition not found",
+            detail="Column Definition not found",
         )
     # Update the fields of the existing column definition
     for key, value in column_definition_data.dict(exclude_unset=True).items():
@@ -85,6 +85,6 @@ def delete_column_definition(db: Session, column_definition_id: int) -> bool:
     return False
 
 
-# List all column definitions (optional)
+# List all column definitions
 def list_column_definitions(db: Session) -> List[ColumnDefinition]:
     return db.query(ColumnDefinition).all()
