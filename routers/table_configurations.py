@@ -44,21 +44,18 @@ async def update_table_config(
     table_configuration_data: TableConfigurationUpdate,
     db: Session = Depends(get_db),
 ):
-    # existing_config = get_table_configuration(db, table_configuration_id)
-    # if not existing_config:
-    #     raise HTTPException(status_code=404, detail="Table Configuration not found")
     return update_table_configuration(
         db, table_configuration_id, table_configuration_data
     )
 
 
 @router.delete("/{table_configuration_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_table_config(
+def delete_table_config(
     table_configuration_id: int, db: Session = Depends(get_db)
 ):
     success = delete_table_configuration(db, table_configuration_id)
     if not success:
-        raise HTTPException(status_code=404, detail="Table Configuration not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Table Configuration not found")
 
 
 @router.get("/", response_model=list[TableConfigurationRead])

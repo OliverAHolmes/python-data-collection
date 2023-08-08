@@ -86,6 +86,15 @@ def test_delete_table_configuration_when_none(db_session):
     assert response.json() == {"detail": "Table Configuration not found"}
 
 
+def test_delete_table_configuration_with_invalid_id_type(db_session):
+    # Using a string as the table_configuration_id instead of an integer
+    table_configuration_id = "invalid_id"
+    response = client.delete(f"{base_url}{table_configuration_id}")
+
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+    assert "value is not a valid integer" in response.json()["detail"][0]["msg"]
+
+
 def test_unsupported_column_constraint(db_session):
     # Create an entry with an unsupported column constraint
     response = client.post(
@@ -107,8 +116,8 @@ def test_unsupported_column_constraint(db_session):
         },
     )
     # Expecting an Unprocessable Entity response
-    assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert "value is not a valid enumeration member" in response.json()
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+    assert "value is not a valid enumeration member" in response.json()["detail"][0]["msg"]
 
     # Ensure the invalid table was not created
     response = client.get(base_url)

@@ -96,3 +96,11 @@ def test_delete_column_definition_route_not_found(db_session):
 
     response = client.delete(f"{BASE_URL}{column_definition_id}")
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+def test_delete_column_definition_route_with_invalid_id_type(db_session):
+    # Using a string as the table_configuration_id instead of an integer
+    column_definition_id = "invalid_id"
+    response = client.delete(f"{BASE_URL}{column_definition_id}")
+
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+    assert "value is not a valid integer" in response.json()["detail"][0]["msg"]
