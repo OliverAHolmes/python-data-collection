@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.exc import SQLAlchemyError
 from schemas.column_definition import (
     ColumnDefinitionRead,
     ColumnDefinitionCreate,
