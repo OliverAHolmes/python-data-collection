@@ -1,10 +1,7 @@
-# Dynamic Data Collection API for Farming Practices Using FastAPI
+# Dynamic Data Collection API Using FastAPI
 
 ## Objective:
-Develop a flexible API using FastAPI that allows for dynamic data collection from farmers regarding their farming practices over a specified number of years. The API should support the creation of varied table configurations based on user needs.
-
-Link for assessment:
-[python-data-collection](https://github.com/regrow-coding-challenge/python-data-collection)
+Develop a flexible API using FastAPI that allows for dynamic data collection.
 
 ## Features & Requirements:
 
@@ -13,11 +10,11 @@ Link for assessment:
 - Allow the user to define columns for the data collection table through API requests.
 - Support a variety of column types:
     - Four-digit number (e.g., Year)
-    - Constrained picklist (e.g., Crop Type with options like corn, wheat, etc.)
-    - Constrained float (e.g., Tillage Depth where 0 <= x < 10)
-    - Boolean (e.g., Tilled?)
-    - Regex validated string (e.g., External Account ID)
-    - Slider control mapped to a float (alternative representation in API, since there's no UI)
+    - Constrained picklist
+    - Constrained float
+    - Boolean
+    - Regex validated string
+    - Float
 
 2. **Dynamic Row Configuration:**
 
